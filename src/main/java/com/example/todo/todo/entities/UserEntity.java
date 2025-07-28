@@ -22,7 +22,7 @@ public class UserEntity {
 
     @NotNull(message = "This field is required")
     private String username;
-    
+
     @Email(message = "Enter a valid email address")
     @NotNull(message = "This field is required")
     private String email;

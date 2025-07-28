@@ -7,5 +7,5 @@ import com.example.todo.todo.entities.UserEntity;
 
 @Repository
 public interface UserRepository extends MongoRepository<UserEntity, String> {
-
+    UserEntity findByEmail(String email);
 }
