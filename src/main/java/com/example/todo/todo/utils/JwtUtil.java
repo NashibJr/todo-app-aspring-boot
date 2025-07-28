@@ -24,14 +24,16 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean verifyToken(UserEntity user, String token) {
-        String payload = Jwts.parserBuilder()
+    public String getPayload(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
 
-        return user.getId() == payload;
+    public boolean verifyToken(UserEntity user, String token) {
+        return user.getId() == this.getPayload(token);
     }
 }
