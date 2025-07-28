@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.todo.todo.dtos.LoginDto;
+import com.example.todo.todo.dtos.Response;
 import com.example.todo.todo.entities.UserEntity;
 import com.example.todo.todo.services.UserServices;
 
@@ -28,5 +30,10 @@ public class UserController {
     @GetMapping("/{id}")
     ResponseEntity<UserEntity> getOneUser(@PathVariable String id) {
         return userServices.getOneUser(id);
+    }
+
+    @PostMapping("/auth/login")
+    ResponseEntity<Response> login(@RequestBody LoginDto loginDto) {
+        return userServices.login(loginDto);
     }
 }

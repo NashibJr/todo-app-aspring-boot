@@ -10,6 +10,7 @@ public class Response {
     private String error;
     private Object object;
     private List<Object> objects;
+    private String token;
 
     public Response() {
     }
@@ -30,5 +31,11 @@ public class Response {
 
     public Response(Object object) {
         this.object = object;
+    }
+
+    public Response(Object object, String message, String token) {
+        this.object = object;
+        this.message = message;
+        this.token = token;
     }
 }

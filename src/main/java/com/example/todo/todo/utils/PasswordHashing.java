@@ -11,7 +11,7 @@ public class PasswordHashing {
         return passwordEncoder.encode(password);
     }
 
-    public boolean verifyPassword(String password, UserEntity user) {
+    public boolean checkPassword(String password, UserEntity user) {
         return passwordEncoder.matches(password, user.getPassword());
     }
 }

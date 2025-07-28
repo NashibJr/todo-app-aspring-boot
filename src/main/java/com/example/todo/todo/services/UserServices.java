@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.todo.todo.dtos.LoginDto;
 import com.example.todo.todo.dtos.Response;
 import com.example.todo.todo.entities.UserEntity;
 import com.example.todo.todo.repositories.UserRepository;
+import com.example.todo.todo.utils.JwtUtil;
 import com.example.todo.todo.utils.PasswordHashing;
 
 @Service
@@ -49,5 +51,33 @@ public class UserServices {
         UserEntity user = userRepository.findById(id).orElse(null);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    public ResponseEntity<Response> login(LoginDto loginDto) {
+        try {
+            UserEntity user = userRepository.findByEmail(loginDto.getEmail());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new Response("User not found", ""));
+            }
+
+            PasswordHashing passwordHashing = new PasswordHashing();
+            boolean checkPassword = passwordHashing.checkPassword(
+                    loginDto.getPassword(),
+                    user);
+            if (!checkPassword) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                        new Response("Incorect bassword", ""));
+            }
+
+            JwtUtil jwtUtil = new JwtUtil();
+            String token = jwtUtil.getToken(user.getId());
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(
+                    new Response(user, "Login Successful", token));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new Response(e.getMessage(), ""));
+        }
     }
 }
