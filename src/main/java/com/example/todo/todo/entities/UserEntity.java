@@ -1,11 +1,13 @@
 package com.example.todo.todo.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
@@ -33,7 +35,8 @@ public class UserEntity {
     private String password;
 
     @DBRef
-    private List<TodoEntity> todos;
+    @JsonBackReference
+    private List<TodoEntity> todos = new ArrayList<>();
 
     private String imagePath;
 }
