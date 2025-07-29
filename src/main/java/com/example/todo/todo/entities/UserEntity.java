@@ -1,6 +1,9 @@
 package com.example.todo.todo.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,6 +31,9 @@ public class UserEntity {
     private String email;
 
     private String password;
+
+    @DBRef
+    private List<TodoEntity> todos;
 
     private String imagePath;
 }
