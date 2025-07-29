@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.todo.todo.dtos.CreateUserDto;
 import com.example.todo.todo.dtos.LoginDto;
 import com.example.todo.todo.dtos.Response;
 import com.example.todo.todo.entities.UserEntity;
@@ -18,7 +19,7 @@ public class UserController {
     UserServices userServices;
 
     @PostMapping("/create")
-    ResponseEntity<?> create(@RequestBody UserEntity userData) {
+    ResponseEntity<?> create(@ModelAttribute CreateUserDto userData) {
         return userServices.createUser(userData);
     }
 

@@ -1,5 +1,6 @@
 package com.example.todo.todo.services;
 
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.example.todo.todo.dtos.CreateUserDto;
 import com.example.todo.todo.dtos.LoginDto;
 import com.example.todo.todo.dtos.Response;
 import com.example.todo.todo.entities.UserEntity;
@@ -22,7 +24,7 @@ public class UserServices {
     @Autowired
     UserRepository userRepository;
 
-    public ResponseEntity<?> createUser(UserEntity userData) {
+    public ResponseEntity<?> createUser(CreateUserDto userData) {
         try {
             UserEntity exists = userRepository.findByEmail(userData.getEmail());
             if (exists != null) {
@@ -34,7 +36,19 @@ public class UserServices {
             PasswordHashing passwordHashing = new PasswordHashing();
             String hashedPassword = passwordHashing.hashPassword(userData.getPassword());
             userData.setPassword(hashedPassword);
-            UserEntity user = userRepository.save(userData);
+
+            String imageName = System.currentTimeMillis()
+                    + userData.getImage().getOriginalFilename();
+            Path imagePath = Paths.get("uploads").resolve(imageName);
+            Files.createDirectories(imagePath.getParent());
+            Files.write(imagePath, userData.getImage().getBytes());
+
+            UserEntity user = new UserEntity();
+            user.setPassword(hashedPassword);
+            user.setEmail(userData.getEmail());
+            user.setUsername(userData.getUsername());
+            user.setImagePath(imageName);
+            userRepository.save(user);
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new Response(user, "Account successfully created"));
